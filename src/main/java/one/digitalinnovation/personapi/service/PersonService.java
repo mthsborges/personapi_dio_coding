@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.swing.text.html.Option;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PersonService {
@@ -48,5 +46,28 @@ public class PersonService {
                 .orElseThrow(() -> new PersonNotFoundException(id));
 
         return PersonDTO.builder().build();
+    }
+
+    public void delete(Long id) throws PersonNotFoundException {
+        verifyIfExists(id);
+
+        personRepository.deleteById(id);
+
+    }
+
+    private PersonDTO verifyIfExists(Long id) throws PersonNotFoundException {
+        return personRepository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException(id));
+
+    }
+
+    public MessageResponseDTO updateById(Long id, PersonDTO personDTO) throws PersonNotFoundException {
+       verifyIfExists(id);
+
+        return MessageResponseDTO
+                .builder()
+                .message("Updated person with ID")
+                .build();
+
     }
 }
